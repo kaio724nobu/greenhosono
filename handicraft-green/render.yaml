@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: handicraft-green
+    env: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /api/health
+    disk:
+      name: app-data
+      mountPath: /app
+      sizeGB: 1
+

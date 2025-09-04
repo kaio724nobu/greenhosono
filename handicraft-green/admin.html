@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>商品管理 | Handicraft GREEN</title>
+  <link rel="stylesheet" href="./assets/css/style.css" />
+  <meta name="robots" content="noindex" />
+</head>
+<body data-admin-page="1">
+  <header class="site-header admin-header">
+    <div class="container row">
+      <a href="./index.html" class="brand"><img class="brand-logo" src="./assets/img/logo.gif" alt="Handicraft GREEN ロゴ" /><span class="brand-name">Handicraft GREEN</span></a>
+      <nav>
+        <a href="./admin.html" aria-current="page">商品管理</a>
+        <a id="logoutBtn" href="#">ログアウト</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container admin-grid">
+    <aside class="admin-nav">
+      <a class="active" href="./admin.html">商品</a>
+    </aside>
+    <section>
+      <h1>商品管理</h1>
+      <div class="badge" id="fileStatus" style="margin: 6px 0 12px;">ファイル保存API: 未接続（server.py を起動）</div>
+      <div class="grid">
+        <div class="col-6">
+          <div class="card" style="padding:16px;">
+            <div class="row" style="margin-bottom:8px;">
+              <div class="muted">商品一覧</div>
+              <a href="#" id="newBtn" class="btn btn-ghost">新規作成</a>
+            </div>
+            <div id="adminProductsTable"></div>
+          </div>
+          <div class="card" style="padding:16px; margin-top:12px;">
+            <div class="row" style="margin-bottom:8px;">
+              <div class="muted">インポート（JSON貼り付け）</div>
+            </div>
+            <p class="muted">minneのショップ一覧で取得した JSON を貼り付けて「読み込み」を押してください。画像URLは外部参照に対応しています。</p>
+            <textarea id="importJson" rows="6" placeholder='[
+  {"name":"商品名","price":1200,"image":"https://...jpg"}
+]'></textarea>
+            <div style="margin-top:10px;" class="row">
+              <button id="importJsonBtn" class="btn btn-primary">読み込み</button>
+              <a id="importHelpBtn" class="btn btn-ghost" href="#">使い方</a>
+              <button id="exportJsonBtn" class="btn btn-ghost">エクスポート（コピー）</button>
+              <a class="btn btn-ghost" href="./products.html?edit=1" target="_blank" rel="noopener">一覧で確認</a>
+              <button id="saveToFileBtn" class="btn btn-gold">ファイルに保存</button>
+              <button id="saveToAdminBtn" class="btn btn-gold">adminに保存</button>
+              <button id="clearCacheBtn" class="btn btn-ghost">キャッシュ削除</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="card" style="padding:16px;">
+            <div class="muted">商品フォーム</div>
+            <form id="productForm">
+              <input type="hidden" id="pid" />
+              <label for="pname">商品名</label>
+              <input id="pname" placeholder="商品名" required />
+              <div class="grid">
+                <div class="col-6">
+                  <label for="pcat">カテゴリ</label>
+                  <select id="pcat">
+                    <option value="silver">シルバー</option>
+                    <option value="synthetic">合成石</option>
+                    <option value="natural">天然石</option>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <label for="pprice">価格</label>
+                  <input id="pprice" type="number" min="0" step="100" value="0" />
+                </div>
+              </div>
+              <label for="pdesc">説明</label>
+              <textarea id="pdesc" rows="3" placeholder="商品の説明"></textarea>
+              <label for="pimage">画像URL または プレースホルダー（svg:ring 等）</label>
+              <input id="pimage" placeholder="/assets/img/xxx.jpg もしくは https://...jpg または svg:ring" />
+              <div class="grid" style="margin-top:8px; align-items:end;">
+                <div class="col-6">
+                  <label for="pimageFile">画像アップロード（jpeg/png/webp/gif/svg）</label>
+                  <input id="pimageFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml" />
+                </div>
+                <div class="col-6">
+                  <div class="muted" style="margin-bottom:6px;">プレビュー</div>
+                  <div class="card" style="padding:8px; display:flex; align-items:center; justify-content:center; min-height:120px;">
+                    <img id="pimagePreview" alt="プレビュー" style="max-width:100%; max-height:140px; display:none;" />
+                    <div id="pimagePreviewEmpty" class="muted" style="text-align:center;">画像未選択</div>
+                  </div>
+                </div>
+              </div>
+              <label><input id="pfeat" type="checkbox" /> 特集に掲載</label>
+              <div style="margin-top:12px;">
+                <button class="btn btn-primary" type="submit">保存</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Floating toolbox: always visible -->
+  <div class="admin-fab" aria-label="管理ツール">
+    <button class="btn btn-ghost" data-action="clear-cache" title="キャッシュ削除">キャッシュ削除</button>
+    <button class="btn btn-gold" data-action="save-admin" title="adminに保存">admin保存</button>
+    <button class="btn btn-gold" data-action="save-file" title="ファイルに保存">ファイル保存</button>
+  </div>
+
+  <script src="./assets/js/auth.js"></script>
+  <script src="./assets/js/admin.js"></script>
+</body>
+</html>

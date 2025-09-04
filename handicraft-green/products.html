@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>商品一覧 | Handicraft GREEN</title>
+  <link rel="stylesheet" href="./assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container row">
+      <a href="./index.html" class="brand"><img class="brand-logo" src="./assets/img/logo.gif" alt="Handicraft GREEN ロゴ" /><span class="brand-name">Handicraft GREEN</span></a>
+      <div class="header-actions">
+        <nav>
+          <a href="./index.html">ホーム</a>
+          <a href="./products.html">商品</a>
+          <a href="./subscribe.html">サブスク</a>
+          <a href="./faq.html">FAQ</a>
+          <a href="./cart.html">カート (<span data-cart-count>0</span>)</a>
+        </nav>
+        <div class="header-social">
+          <a class="social-link" href="https://www.instagram.com/your_account" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37Z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+          </a>
+          <a class="social-link" href="https://x.com/your_account" target="_blank" rel="noopener" aria-label="X">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2H21l-6.52 7.46L22 22h-6.59l-5.16-6.85L3.6 22H1l7.06-8.07L2 2h6.69l4.66 6.18L18.244 2Zm-2.31 18h2.02L8.14 4H6.02l9.914 16Z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <h1>商品一覧</h1>
+      <div id="storageNotice" class="card" style="padding:10px; margin:10px 0; display:none;">
+        <div class="muted">現在、サンプル商品を表示しています。管理画面と同じURL（例: http://localhost:8000）で開いているか確認してください。<a href="./admin/login.html" style="margin-left:8px;">管理画面へ</a></div>
+      </div>
+      <div id="quickEditor" style="display:none; margin:10px 0 18px;">
+        <div class="card" style="padding:12px;">
+          <div class="muted" style="margin-bottom:8px;">クイック追加（このページから保存）</div>
+          <div class="grid">
+            <div class="col-6">
+              <label>商品名</label>
+              <input id="qe_name" placeholder="商品名" />
+            </div>
+            <div class="col-3">
+              <label>価格</label>
+              <input id="qe_price" type="number" min="0" step="100" value="0" />
+            </div>
+            <div class="col-3">
+              <label>カテゴリ</label>
+              <select id="qe_cat"><option value="silver">シルバー</option><option value="synthetic">合成石</option><option value="natural">天然石</option></select>
+            </div>
+          </div>
+          <label>画像URL（http/https/data: 可）</label>
+          <input id="qe_img" placeholder="https://...jpg または data:..." />
+          <div style="margin-top:10px;" class="row">
+            <button id="qe_save" class="btn btn-primary">保存して再読み込み</button>
+            <div class="muted">ヒント: URLに ?edit=1 を付けるとこのボックスが表示されます。</div>
+          </div>
+        </div>
+      </div>
+      <div class="category-tags" id="categoryBar"></div>
+      <div style="margin:12px 0;">
+        <label for="categorySelect">カテゴリを選択</label>
+        <select id="categorySelect">
+          <option value="all">すべて</option>
+          <option value="silver">シルバー</option>
+          <option value="synthetic">合成石</option>
+          <option value="natural">天然石</option>
+        </select>
+      </div>
+      <div id="products" class="grid"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container row">
+      <div>© Handicraft GREEN</div>
+      <div class="social">
+        <a class="social-link" href="https://www.instagram.com/your_account" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37Z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+        </a>
+        <a class="social-link" href="https://x.com/your_account" target="_blank" rel="noopener" aria-label="X">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2H21l-6.52 7.46L22 22h-6.59l-5.16-6.85L3.6 22H1l7.06-8.07L2 2h6.69l4.66 6.18L18.244 2Zm-2.31 18h2.02L8.14 4H6.02l9.914 16Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./assets/js/data.js"></script>
+  <script src="./assets/js/app.js"></script>
+  <script>
+    // Show notice if no stored products
+    (function(){
+      try {
+        const list = JSON.parse(localStorage.getItem('hc_products')||'[]');
+        if(!Array.isArray(list) || list.length===0){
+          const n = document.getElementById('storageNotice'); if(n) n.style.display='block';
+        }
+      } catch {}
+    })();
+
+    // Quick editor to write localStorage from the same origin
+    (function(){
+      const params = new URLSearchParams(location.search);
+      if(params.get('edit')==='1'){
+        const box = document.getElementById('quickEditor'); if(box){ box.style.display='block'; }
+        const btn = document.getElementById('qe_save');
+        function uuid(){ return 'p-' + Math.random().toString(36).slice(2,8) + '-' + Date.now().toString(36); }
+        function get(){ try { return JSON.parse(localStorage.getItem('hc_products')||'[]'); } catch { return []; } }
+        function set(v){ localStorage.setItem('hc_products', JSON.stringify(v)); }
+        btn && btn.addEventListener('click', ()=>{
+          const name = (document.getElementById('qe_name')||{}).value || '';
+          const price = parseInt((document.getElementById('qe_price')||{}).value||'0',10)||0;
+          const cat = (document.getElementById('qe_cat')||{}).value || 'silver';
+          const img = (document.getElementById('qe_img')||{}).value || '';
+          if(!name){ alert('商品名を入力してください'); return; }
+          const list = get();
+          list.push({ id: uuid(), name, category: cat, price, description: '', image: img, featured: false });
+          try { set(list); } catch(e){ alert('保存に失敗しました。画像が大きすぎる可能性があります。'); return; }
+          location.reload();
+        });
+      }
+    })();
+
+    // Navigate to hash category if present
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const cat = location.hash.replace('#','');
+      const select = document.getElementById('categorySelect');
+      if(['silver','synthetic','natural'].includes(cat)){
+        select.value = cat; const evt = new Event('change'); select.dispatchEvent(evt);
+        // also click tag when available
+        setTimeout(()=>{
+          const a = document.querySelector(`.tag[data-id="${cat}"]`); if(a) a.click();
+        }, 50);
+      }
+    });
+  </script>
+</body>
+</html>
